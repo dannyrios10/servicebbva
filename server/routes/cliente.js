@@ -7,11 +7,11 @@ const bcrypt = require('bcrypt');
 const _ = require('underscore');
 const {verificaToken, verificaRole} = require('../middlewares/auth');
 
-const Usuarios = require('../models/usuario');
+const Clientes = require('../models/cliente');
 
 
 // Obtener Usuarios
-app.get('/usuarios', (req, res) =>{
+app.get('/clientes', (req, res) =>{
 
     let desde = req.query.desde || 0;
     desde = Number(desde);
@@ -21,10 +21,10 @@ app.get('/usuarios', (req, res) =>{
     
     
 
-   Usuarios.find({}, 'nombre apellido')
+   Clientes.find({}, 'firstname lastname')
            .limit(limite)
            .skip(desde)
-           .exec( (err, usuarios) => {
+           .exec( (err, clientes) => {
                if(err){
                    return res.status(400).json({
                        ok: false,
@@ -32,7 +32,7 @@ app.get('/usuarios', (req, res) =>{
                    })
                }
 
-               Usuarios.countDocuments({}, (err, conteo) =>{
+               Clientes.countDocuments({}, (err, conteo) =>{
 
                 if(err){
                     return res.status(400).json({
@@ -42,7 +42,7 @@ app.get('/usuarios', (req, res) =>{
                 }
                    res.json({
                        ok: true,
-                       usuarios,
+                       clientes,
                        total: conteo
                    });
                });
