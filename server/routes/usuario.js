@@ -21,7 +21,7 @@ app.get('/usuarios', (req, res) =>{
     
     
 
-   Usuarios.find({}, 'nombre apellido')
+   Usuarios.find({}, 'nombre apellido email role')
            .limit(limite)
            .skip(desde)
            .exec( (err, usuarios) => {

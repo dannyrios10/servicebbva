@@ -1,10 +1,12 @@
 const jwt = require('jsonwebtoken');
+
 // Verificar Token
 
 const verificaToken = (req, res, next) =>{
 
     let token = req.get('token'); 
 
+
     jwt.verify(token, process.env.SEED, (err, decoded) =>{
         if(err){
             return res.status(401).json({
@@ -12,62 +14,36 @@ const verificaToken = (req, res, next) =>{
                 msg: 'Token no válido'
             });
         }
-
-        req.usuario = decoded.usuario;
+        const {email, role} = decoded.usuario
+        const final = {
+            email,
+            role
+        } 
+        req.usuario= final;
         next();
     });
 
 
 };
 
+// Verificar el Role
+
 const verificaRole = (req, res, next) =>{
 
-    if(req.usuario.role === 'USER_ROLE'){
+    if(req.usuario.role === 'USER_ROLE' || req.usuario.role === 'COMPANY_ROLE'){
         return res.status(401).json({
             ok: false,
+            usuario: req.usuario,
             msg: 'Solo Administradores'
         });
     }
 
     next();
 
-
-
-};
-
-const verificaEstado = (req, res, next) =>{
-
-    if(req.usuario.estado === false){
-        return res.status(401).json({
-            ok: false,
-            msg: 'Accion no permitida'
-        });
-    }
-
-    next();
-};
-
-const verificaTokenImg = (req, res, next) =>{
-
-    let token = req.query.token; 
-
-    jwt.verify(token, process.env.SEED, (err, decoded) =>{
-        if(err){
-            return res.status(401).json({
-                ok:false,
-                msg: 'Token no válido'
-            });
-        }
-
-        req.usuario = decoded.usuario;
-        next();
-    });
 };
 
 
 module.exports = {
     verificaRole,
-    verificaToken,
-    verificaEstado,
-    verificaTokenImg
+    verificaToken
 };

@@ -37,6 +37,10 @@ let clienteSchema = new Schema({
     },
     location: {
         type: String
+    },
+    telefono: {
+        type: String,
+        default: '  '
     }
 });
 
